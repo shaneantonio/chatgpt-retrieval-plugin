@@ -11,7 +11,7 @@ clone() {
     mkdir -p $GIT_HOME
     cd $GIT_HOME
     git clone $GIT_REPO
-    . $GIT_HOME/chatgpt-retrieval-plugin/devops/gcp.profile
+    . $GIT_HOME/chatgpt-retrieval-plugin/gcp.profile
 }
 
 # Git Pull
