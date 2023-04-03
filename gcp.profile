@@ -24,7 +24,7 @@ gitPull() {
 # Build
 build() {
     cd $GIT_HOME/chatgpt-retrieval-plugin
-    docker build . -t $IMAGE
+    docker buildx build --platform linux/amd64 -t $IMAGE .
 }
 
 # Push to GCP (Google Container Registry)
