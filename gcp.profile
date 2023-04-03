@@ -6,6 +6,12 @@ REGION=australia-southeast1
 GIT_HOME=~/git
 GIT_REPO=https://github.com/shaneantonio/chatgpt-retrieval-plugin.git
 
+# Once Off
+onceOff() {
+    #gcloud services enable containerregistry.googleapis.com
+    gcloud services enable run.googleapis.com
+}
+
 # Clone
 clone() {
     mkdir -p $GIT_HOME
