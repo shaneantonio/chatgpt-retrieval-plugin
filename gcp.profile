@@ -51,6 +51,9 @@ deploy() {
 }
 
 upsert() {
+    docker build -t upsert ./upsert
+    docker tag upsert $GCR/upsert
+    docker push $GCR/upsert
     gcloud run deploy upsert --image $GCR/upsert --project $PROJECT_ID --region $REGION --memory 1024Mi -q \
         --set-env-vars ENDPOINT_URL=$ENDPOINT_URL
 }
