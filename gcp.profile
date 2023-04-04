@@ -42,13 +42,12 @@ push () {
 # Deploy
 deploy() {
     gcloud run deploy $IMAGE --image $GCR/$IMAGE --project $PROJECT_ID --region $REGION --memory 1024Mi -q \
-        --set-env-vars BEARER_TOKEN= \
-        --set-env-vars OPENAPI_API_KEY= \
-        --set-env-vars DATASTORE= \
-        --set-env-vars PINECONE_API_KEY= \
-        --set-env-vars PINECONE_ENVIRONMENT= \
-        --set-env-vars PINECONE_INDEX=
-
+        --set-env-vars BEARER_TOKEN=$BEARER_TOKEN \
+        --set-env-vars OPENAPI_API_KEY=$OPENAPI_API_KEY \
+        --set-env-vars DATASTORE=$DATASTORE \
+        --set-env-vars PINECONE_API_KEY=$PINECONE_API_KEY \
+        --set-env-vars PINECONE_ENVIRONMENT=$PINECONE_ENVIRONMENT \
+        --set-env-vars PINECONE_INDEX=$PINECONE_INDEX
 }
 
 # Build, Push and Deploy
