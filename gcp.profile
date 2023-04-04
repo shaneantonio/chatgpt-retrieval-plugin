@@ -41,7 +41,9 @@ push () {
 
 # Deploy
 deploy() {
-    gcloud run deploy $IMAGE --image $GCR/$IMAGE --project $PROJECT_ID --region $REGION --memory 1024Mi -q
+    gcloud run deploy $IMAGE --image $GCR/$IMAGE --project $PROJECT_ID --region $REGION --memory 1024Mi -q \
+        --set-env-vars DATASTORE=example_datastore \
+        --set-env-vars BEARER_TOKEN=example_bearer_token
 }
 
 # Build, Push and Deploy
