@@ -1,4 +1,5 @@
 #pip install -qU datasets pandas tqdm
+# https://huggingface.co/datasets/squad
 
 from datasets import load_dataset
 
@@ -11,6 +12,17 @@ print(data.head())
 data = data.drop_duplicates(subset=["context"])
 print(len(data))
 print(data.head())
+
+documents = [
+    {
+        'id': r['id'],
+        'text': r['context'],
+        'metadata': {
+            'title': r['title']
+        }
+    } for r in data.to_dict(orient='records')
+]
+print(documents[:3])
 
 import os
 
