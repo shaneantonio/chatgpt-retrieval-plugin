@@ -50,6 +50,11 @@ deploy() {
         --set-env-vars PINECONE_INDEX=$PINECONE_INDEX
 }
 
+upsert() {
+    gcloud run deploy upsert --image $GCR/upsert --project $PROJECT_ID --region $REGION --memory 1024Mi -q \
+        --set-env-vars ENDPOINT_URL=$ENDPOINT_URL
+}
+
 # Build, Push and Deploy
 bpd() {
     build && push && deploy
