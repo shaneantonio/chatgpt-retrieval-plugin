@@ -35,7 +35,7 @@ sub_app = FastAPI(
     description="A retrieval API for querying and filtering documents based on natural language queries and metadata",
     version="1.0.0",
     servers=[{"url": "https://chatgpt-retrieval-plugin-w6ee4nfjga-ts.a.run.app"}],
-    dependencies=[Depends(validate_token)],
+    #dependencies=[Depends(validate_token)],
 )
 app.mount("/sub", sub_app)
 
