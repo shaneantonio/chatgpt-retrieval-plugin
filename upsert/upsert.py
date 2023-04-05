@@ -66,7 +66,7 @@ print(len(queries))
 print(queries[:3])
 
 res = requests.post(
-    f"${endpoint_url}/query",
+    f"{endpoint_url}/query",
     headers=headers,
     json={
         'queries': queries[:3]
