@@ -57,7 +57,8 @@ upsert() {
     docker tag upsert $GCR/upsert
     docker push $GCR/upsert
     gcloud beta run jobs create upsert --image $GCR/upsert --project $PROJECT_ID --region $REGION --memory 1024Mi -q \
-        --set-env-vars ENDPOINT_URL=$ENDPOINT_URL
+        --set-env-vars ENDPOINT_URL=$ENDPOINT_URL \
+        --set-env-vars BEARER_TOKEN=$BEARER_TOKEN
     gcloud beta run jobs execute upsert --project $PROJECT_ID --region $REGION
 }
 
