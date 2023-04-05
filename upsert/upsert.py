@@ -36,7 +36,7 @@ import requests
 from requests.adapters import HTTPAdapter, Retry
 
 batch_size = 100
-endpoint_url = "http://localhost:8000"
+endpoint_url = os.environ.get("ENDPOINT_URL")
 s = requests.Session()
 
 # we setup a retry strategy to retry on 5xx errors
@@ -66,7 +66,7 @@ print(len(queries))
 print(queries[:3])
 
 res = requests.post(
-    "http://0.0.0.0:8000/query",
+    f"${endpoint_url}/query",
     headers=headers,
     json={
         'queries': queries[:3]
