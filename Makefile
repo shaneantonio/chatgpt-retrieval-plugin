@@ -1,13 +1,14 @@
++=ENV=np
 WORKSPACE = /workspaces/chatgpt-retrieval-plugin
-include ${WORKSPACE}/np.env
 IMAGE = chatgpt-retrieval-plugin
-PROJECT = shane-np
+PROJECT = shane-${ENV}
 GCR = asia.gcr.io/${PROJECT}
 REGION = australia-southeast1
 GIT_HOME = ~/git
 GIT_REPO = https://github.com/shaneantonio/chatgpt-retrieval-plugin.git
 GCLOUD = /workspaces/bin/google-cloud-sdk/bin/gcloud
 
+include ${WORKSPACE}/${ENV}.env
 
 login:
 	${GCLOUD} auth login

@@ -138,3 +138,4 @@ dmypy.json
 .DS_Store
 squad
 np.env
+upsert/semantic-search.ipynb
