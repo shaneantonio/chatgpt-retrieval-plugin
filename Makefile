@@ -73,6 +73,7 @@ build_push_upsert: docker-auth
 
 
 run_upsert_cloud: build_push_upsert
+	${GCLOUD} run services delete upsert --project ${PROJECT} --region ${REGION} -q
 	${GCLOUD} run deploy upsert --image ${GCR}/upsert --project ${PROJECT} --region ${REGION} \
 		--no-cpu-throttling --min-instances 1 --max-instances 1 --allow-unauthenticated \
 		--set-env-vars ENDPOINT_URL=${ENDPOINT_URL} \
@@ -85,6 +86,13 @@ run_server_locally:
 
 run_upsert_locally:
 	cd ${WORKSPACE}/upsert && \
-		ENDPOINT_URL=${ENDPOINT_URL} \
-		BEARER_TOKEN=${BEARER_TOKEN} \
+		export ENDPOINT_URL=${ENDPOINT_URL} && \
+		export BEARER_TOKEN=${BEARER_TOKEN} && \
 		sh entrypoint.sh
+
+
+run_query_server_locally:
+	cd ${WORKSPACE}/upsert && \
+		export ENDPOINT_URL=${ENDPOINT_URL} && \
+		export BEARER_TOKEN=${BEARER_TOKEN} && \
+		python query_server.py
