@@ -66,3 +66,19 @@ upsert() {
 bpd() {
     gitPull && . gcp.profile && build && push && deploy
 }
+
+logs() {
+/workspaces/bin/google-cloud-sdk/bin/gcloud logging read --limit 100 --order desc --format "value(textPayload)" --freshness 1h '
+    resource.type = "cloud_run_revision"
+    resource.labels.service_name = "upsert"
+    resource.labels.location = "australia-southeast1"
+    severity>=DEFAULT' | tac
+}
+
+tail() {
+/workspaces/bin/google-cloud-sdk/bin/gcloud beta logging tail --format "value(textPayload)" '
+    resource.type = "cloud_run_revision"
+    resource.labels.service_name = "upsert"
+    resource.labels.location = "australia-southeast1"
+    severity>=DEFAULT'
+}

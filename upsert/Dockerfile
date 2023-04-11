@@ -8,4 +8,4 @@ RUN curl -X GET "https://datasets-server.huggingface.co/first-rows?dataset=squad
 
 COPY . /code/
 
-CMD ["python", "upsert.py"]
+CMD ["sh", "entrypoint.sh"]

@@ -1,4 +1,4 @@
-+=ENV=np
+ENV=np
 WORKSPACE = /workspaces/chatgpt-retrieval-plugin
 IMAGE = chatgpt-retrieval-plugin
 PROJECT = shane-${ENV}
@@ -39,11 +39,14 @@ build:
 	docker buildx build --platform linux/amd64 -t ${IMAGE} .
 
 
-push:
-	cd ${WORKSPACE}
+docker-auth:
 	${GCLOUD} auth configure-docker gcr.io
-	docker tag ${IMAGE} ${GCR}/${IMAGE}
 	${GCLOUD} auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://asia.gcr.io
+
+
+push: docker-auth
+	cd ${WORKSPACE}
+	docker tag ${IMAGE} ${GCR}/${IMAGE}
 	docker push ${GCR}/${IMAGE}
 
 
@@ -62,20 +65,26 @@ deploy:
 server_bpd: build push deploy
 
 
-upsert_bpd:
+build_push_upsert: docker-auth
 	cd ${WORKSPACE}
 	docker build -t upsert ./upsert
 	docker tag upsert ${GCR}/upsert
 	docker push ${GCR}/upsert
-	${GCLOUD} beta run jobs delete upsert --quiet --project ${PROJECT} --region ${REGION}
-	${GCLOUD} beta run jobs create upsert --image ${GCR}/upsert --project ${PROJECT} --region ${REGION} --memory 1024Mi -q \
+
+
+run_upsert_cloud: build_push_upsert
+	${GCLOUD} run deploy upsert --image ${GCR}/upsert --project ${PROJECT} --region ${REGION} \
+		--no-cpu-throttling --min-instances 1 --max-instances 1 --allow-unauthenticated \
 		--set-env-vars ENDPOINT_URL=${ENDPOINT_URL} \
 		--set-env-vars BEARER_TOKEN=${BEARER_TOKEN}
 
 
-upsert_execute:
-	${GCLOUD} beta run jobs execute upsert --project ${PROJECT} --region ${REGION}
-
-
 run_server_locally:
 	docker run --env-file np.env -p 8080 server
+
+
+run_upsert_locally:
+	cd ${WORKSPACE}/upsert && \
+		ENDPOINT_URL=${ENDPOINT_URL} \
+		BEARER_TOKEN=${BEARER_TOKEN} \
+		sh entrypoint.sh
