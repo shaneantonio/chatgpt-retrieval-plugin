@@ -68,7 +68,7 @@ bpd() {
 }
 
 logs() {
-/workspaces/bin/google-cloud-sdk/bin/gcloud logging read --limit 100 --order desc --format "value(textPayload)" --freshness 1h '
+    /workspaces/bin/google-cloud-sdk/bin/gcloud logging read --limit 100 --order desc --format "value(textPayload)" --freshness 1h '
     resource.type = "cloud_run_revision"
     resource.labels.service_name = "upsert"
     resource.labels.location = "australia-southeast1"
@@ -76,9 +76,22 @@ logs() {
 }
 
 tail() {
-/workspaces/bin/google-cloud-sdk/bin/gcloud beta logging tail --format "value(textPayload)" '
+    /workspaces/bin/google-cloud-sdk/bin/gcloud beta logging tail --format "value(textPayload)" '
     resource.type = "cloud_run_revision"
     resource.labels.service_name = "upsert"
     resource.labels.location = "australia-southeast1"
     severity>=DEFAULT'
+}
+
+query() {
+    curl -G localhost:8080/query --data-urlencode "query=$1" 
+}
+
+testQuery() {
+    query "whom did the Virgin Mary allegedly appear in 1858 in Lourdes France?"
+}
+
+upsertText() {
+    #  upsertText aaaa01 "Shane has 5 fingers"
+    curl -G localhost:8080/upsert --data-urlencode "id=$1" --data-urlencode "title=ShanesData" --data-urlencode "context=$2"
 }

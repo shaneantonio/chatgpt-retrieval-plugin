@@ -50,7 +50,7 @@ push: docker-auth
 	docker push ${GCR}/${IMAGE}
 
 
-deploy:
+deploy_web_cloud:
 	${GCLOUD} run deploy ${IMAGE} --image ${GCR}/${IMAGE} --project ${PROJECT} --region ${REGION} \
 		--allow-unauthenticated \
 		--memory 1024Mi -q \
