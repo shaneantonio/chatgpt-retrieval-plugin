@@ -21,6 +21,12 @@ once-off: login
 	curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-425.0.0-linux-x86_64.tar.gz
 
 
+install_dependencies:
+	pip install poetry
+	poetry export -f requirements.txt --output requirements.txt --without-hashes
+	pip install --no-cache-dir --upgrade -r requirements.txt
+
+
 clone:
 	mkdir -p ${GIT_HOME}
 	cd ${GIT_HOME}
@@ -89,6 +95,17 @@ run_upsert_locally:
 		export ENDPOINT_URL=${ENDPOINT_URL} && \
 		export BEARER_TOKEN=${BEARER_TOKEN} && \
 		sh entrypoint.sh
+
+
+run_web_locally:
+	cd ${WORKSPACE} && \
+		BEARER_TOKEN=${BEARER_TOKEN} \
+		OPENAI_API_KEY=${OPENAI_API_KEY} \
+		DATASTORE=${DATASTORE} \
+		PINECONE_API_KEY=${PINECONE_API_KEY} \
+		PINECONE_ENVIRONMENT=${PINECONE_ENVIRONMENT} \
+		PINECONE_INDEX=${PINECONE_INDEX} \
+		sh -c "uvicorn server.main:app --host 0.0.0.0 --port 8080"
 
 
 run_query_server_locally:

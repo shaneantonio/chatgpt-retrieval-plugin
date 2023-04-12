@@ -3,7 +3,7 @@ import uvicorn
 from fastapi import FastAPI, File, HTTPException, Depends, Body, UploadFile
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.staticfiles import StaticFiles
-
+from models.models import Query, Document, DocumentMetadata
 from models.api import (
     DeleteRequest,
     DeleteResponse,
@@ -38,6 +38,42 @@ sub_app = FastAPI(
     dependencies=[Depends(validate_token)],
 )
 app.mount("/sub", sub_app)
+
+
+@app.get("/query")
+async def get_query(query: str):
+    try:
+        queries = [Query(query=query)]
+        print(queries)
+        results = await datastore.query(queries)
+        res = QueryResponse(results=results)
+        print(res)
+        response = ""
+        for query_result in res.results:
+            query = query_result.query
+            answers = []
+            scores = []
+            for result in query_result.results:
+                answers.append(result.text)
+                scores.append(round(result.score, 2))
+            response += "-"*70+"\n"+query+"\n\n"+"\n".join(
+                    [f"{s}: {a}" for a, s in zip(answers, scores)])+"\n"+"-"*70+"\n\n"
+
+        return response
+
+    except Exception as e:
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail="Internal Service Error")
+
+
+@app.get("/upsert")
+async def get_upsert(id: str = "aaaaaa", context: str = "ShanesData", title: str = "Shane has 5 fingers"):
+    try:
+        ids = await datastore.upsert([Document(id=id, text=context, metadata=DocumentMetadata(title=title))])
+        return ids
+    except Exception as e:
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail="Internal Service Error")
 
 
 @app.post(

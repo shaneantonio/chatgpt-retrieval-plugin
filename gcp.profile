@@ -83,8 +83,14 @@ tail() {
     severity>=DEFAULT'
 }
 
+set_env() {
+    . np.env
+    export BEARER_TOKEN
+}
+
 query() {
-    curl -G localhost:8080/query --data-urlencode "query=$1" 
+    set_env
+    curl -H "Authorization: Bearer $BEARER_TOKEN" -G localhost:8080/query --data-urlencode "query=$1" 
 }
 
 testQuery() {
@@ -93,5 +99,6 @@ testQuery() {
 
 upsertText() {
     #  upsertText aaaa01 "Shane has 5 fingers"
-    curl -G localhost:8080/upsert --data-urlencode "id=$1" --data-urlencode "title=ShanesData" --data-urlencode "context=$2"
+    set_env
+    curl -H "Authorization: Bearer $BEARER_TOKEN" -G localhost:8080/upsert --data-urlencode "id=$1" --data-urlencode "title=ShanesData" --data-urlencode "context=$2"
 }
