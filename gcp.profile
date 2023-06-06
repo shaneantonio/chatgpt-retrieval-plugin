@@ -97,6 +97,11 @@ testQuery() {
     query "whom did the Virgin Mary allegedly appear in 1858 in Lourdes France?"
 }
 
+completion() {
+    set_env
+    curl -H "Authorization: Bearer $BEARER_TOKEN" -G localhost:8080/completion --data-urlencode "message=$1" 
+}
+
 upsertText() {
     #  upsertText aaaa01 "Shane has 5 fingers"
     set_env

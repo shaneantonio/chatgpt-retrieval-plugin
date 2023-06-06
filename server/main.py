@@ -14,6 +14,7 @@ from models.api import (
 )
 from datastore.factory import get_datastore
 from services.file import get_document_from_file
+from services.openai import get_chat_completion
 
 bearer_scheme = HTTPBearer()
 BEARER_TOKEN = os.environ.get("BEARER_TOKEN")
@@ -38,6 +39,19 @@ sub_app = FastAPI(
     dependencies=[Depends(validate_token)],
 )
 app.mount("/sub", sub_app)
+
+
+@app.get("/completion")
+async def completion(message: str):
+    try:
+        print(str)
+        results = await get_chat_completion([message])
+        print(results)
+        return results
+
+    except Exception as e:
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail="Internal Service Error")
 
 
 @app.get("/query")
